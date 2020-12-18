@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+$rootDir = \realpath(__DIR__);
+$autoloadFile = '/vendor/autoload.php';
+
+$count = 1;
+$found = false;
+
+while ($found === false){
+    $found = true;
+    if (!\file_exists($rootDir . $autoloadFile)) {
+        $rootDir = sprintf('%s/..', $rootDir);
+        $found = false;
+        $count++;
+    }
+
+    if ($count === 15) {
+        die('Could not fine autoload.php');
+    }
+}
+
+require_once $rootDir . $autoloadFile;
+
+$kernel = new \JzIT\Kernel\Kernel($rootDir);
+$application = new \JzIT\Application\Console($kernel);
+
+$application->run();
